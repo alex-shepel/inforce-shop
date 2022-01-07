@@ -1,5 +1,5 @@
 import s from './App.module.css';
-import Spinner from 'react-spinner';
+import Spinner from 'components/Spinner';
 import { Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import ProductsListView from 'views/ProductsListView';

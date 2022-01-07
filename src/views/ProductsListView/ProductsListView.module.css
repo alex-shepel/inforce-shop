@@ -1,0 +1,14 @@
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.item {
+  max-width: 350px;
+}
+
+.cardTitle {
+  font-size: 14px;
+}
