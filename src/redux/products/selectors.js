@@ -8,7 +8,7 @@ const getIsAdding = state => state.products.isAdding;
 const getIsUpdating = state => state.products.isUpdating;
 const getDeletingIds = state => state.products.deletingIds;
 const getSortedItems = createSelector(getItems, items =>
-  [...items].sort((a, b) => a.name.localeCompare(b.name)),
+  items ? [...items].sort((a, b) => a.name.localeCompare(b.name)) : null,
 );
 
 export {

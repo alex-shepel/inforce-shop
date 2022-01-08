@@ -8,7 +8,7 @@ import {
 } from './operations';
 
 const initialState = {
-  items: [],
+  items: null,
   viewItem: null,
   isLoading: false,
   isAdding: false,
