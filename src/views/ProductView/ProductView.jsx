@@ -62,7 +62,13 @@ const ProductView = () => {
         </Link>
         <Button>Edit</Button>
       </Card.Header>
-      {isOpening || !item ? <Spinner size={64} color={'#444'} /> : renderInfo()}
+      {isOpening || !item ? (
+        <div className={s.spinner}>
+          <Spinner size={64} color={'#444'} />
+        </div>
+      ) : (
+        renderInfo()
+      )}
     </Card>
   );
 };
