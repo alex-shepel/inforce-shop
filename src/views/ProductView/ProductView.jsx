@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import Spinner from 'components/Spinner';
-import Container from 'components/Container';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import ListGroup from 'react-bootstrap/ListGroup';

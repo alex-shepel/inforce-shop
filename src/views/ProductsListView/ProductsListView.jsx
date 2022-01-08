@@ -2,24 +2,21 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteItem,
   fetchItems,
-  getIsDeleting,
+  getDeletingIds,
   getIsLoading,
   getSortedItems,
 } from 'redux/products';
 import { useEffect } from 'react';
 import Spinner from 'components/Spinner';
-import Container from 'components/Container';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import ListGroup from 'react-bootstrap/ListGroup';
-import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import s from './ProductsListView.module.css';
 import { Link } from 'react-router-dom';
 
 const ProductsListView = () => {
   const items = useSelector(getSortedItems);
   const isLoading = useSelector(getIsLoading);
-  const isDeleting = useSelector(getIsDeleting);
+  const deletingIds = useSelector(getDeletingIds);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -27,8 +24,8 @@ const ProductsListView = () => {
   }, [dispatch]);
 
   const renderDeleteButton = id =>
-    isDeleting ? (
-      <Spinner />
+    deletingIds.includes(id) ? (
+      <Spinner size={24} />
     ) : (
       <Button onClick={() => dispatch(deleteItem(id))}>Delete</Button>
     );

@@ -14,7 +14,7 @@ const initialState = {
   isAdding: false,
   isOpening: false,
   isUpdating: false,
-  isDeleting: false,
+  deletingIds: [],
 };
 
 const Error = {
@@ -75,15 +75,15 @@ const slice = createSlice({
       state.isAdding = false;
     },
 
-    [deleteItem.pending]: state => {
-      state.isDeleting = true;
+    [deleteItem.pending]: (state, { meta }) => {
+      state.deletingIds.push(meta.arg);
     },
     [deleteItem.fulfilled]: (state, { meta }) => {
       state.items = state.items.filter(item => item.id !== meta.arg);
-      state.isDeleting = false;
+      state.deletingIds = state.deletingIds.filter(id => id !== meta.arg);
     },
-    [deleteItem.rejected]: (state, { payload }) => {
-      state.isDeleting = false;
+    [deleteItem.rejected]: (state, { meta, payload }) => {
+      state.deletingIds = state.deletingIds.filter(id => id !== meta.arg);
     },
 
     [updateItem.pending]: state => {

@@ -6,12 +6,9 @@ const getIsLoading = state => state.products.isLoading;
 const getIsOpening = state => state.products.isOpening;
 const getIsAdding = state => state.products.isAdding;
 const getIsUpdating = state => state.products.isUpdating;
-const getIsDeleting = state => state.products.isDeleting;
+const getDeletingIds = state => state.products.deletingIds;
 const getSortedItems = createSelector(getItems, items =>
-  [...items].sort((a, b) => {
-    a.name.localeCompare(b.name);
-    console.log('a :', a);
-  }),
+  [...items].sort((a, b) => a.name.localeCompare(b.name)),
 );
 
 export {
@@ -21,6 +18,6 @@ export {
   getIsOpening,
   getIsAdding,
   getIsUpdating,
-  getIsDeleting,
+  getDeletingIds,
   getSortedItems,
 };
