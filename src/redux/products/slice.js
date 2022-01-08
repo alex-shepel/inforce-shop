@@ -9,6 +9,7 @@ import {
 
 const initialState = {
   items: [],
+  viewItem: null,
   isLoading: false,
   isAdding: false,
   isOpening: false,
@@ -50,10 +51,11 @@ const slice = createSlice({
     },
 
     [fetchItem.pending]: state => {
+      state.viewItem = null;
       state.isOpening = true;
     },
     [fetchItem.fulfilled]: (state, { payload }) => {
-      state.items = payload.sort((a, b) => a.name.localeCompare(b.name));
+      state.viewItem = payload;
       state.isOpening = false;
     },
     [fetchItem.rejected]: (state, { payload }) => {

@@ -4,18 +4,20 @@ import {
   fetchItems,
   getIsDeleting,
   getIsLoading,
-  getItems,
+  getSortedItems,
 } from 'redux/products';
 import { useEffect } from 'react';
 import Spinner from 'components/Spinner';
 import Container from 'components/Container';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
+import ListGroup from 'react-bootstrap/ListGroup';
+import ListGroupItem from 'react-bootstrap/ListGroupItem';
 import s from './ProductsListView.module.css';
 import { Link } from 'react-router-dom';
 
 const ProductsListView = () => {
-  const items = useSelector(getItems);
+  const items = useSelector(getSortedItems);
   const isLoading = useSelector(getIsLoading);
   const isDeleting = useSelector(getIsDeleting);
   const dispatch = useDispatch();
@@ -31,7 +33,7 @@ const ProductsListView = () => {
       <Button onClick={() => dispatch(deleteItem(id))}>Delete</Button>
     );
 
-  const renderItem = ({ id, name, imageUrl }) => (
+  const renderItem = ({ id, name, count, imageUrl }) => (
     <li className={s.item} key={id}>
       <Card>
         <Link to={`/products/${id}`}>
@@ -41,13 +43,14 @@ const ProductsListView = () => {
             alt={'product poster'}
             loading={'lazy'}
           />
+          <Card.Body>
+            <Card.Title className={s.cardTitle}>{name}</Card.Title>
+          </Card.Body>
         </Link>
-        <Card.Body>
-          <Card.Title className={s.cardTitle} onClick={() => {}}>
-            <Link to={`/products/${id}`}>{name}</Link>
-          </Card.Title>
+        <Card.Footer className={s.cardFooter}>
+          <span>Count: {count}</span>
           {renderDeleteButton(id)}
-        </Card.Body>
+        </Card.Footer>
       </Card>
     </li>
   );
@@ -60,9 +63,14 @@ const ProductsListView = () => {
     );
 
   return (
-    <Container>
-      {isLoading ? <Spinner size={64} color={'#444'} /> : renderList()}
-    </Container>
+    <>
+      <div className={s.listWrapper}>
+        {isLoading ? <Spinner size={64} color={'#444'} /> : renderList()}
+      </div>
+      <div className={s.buttonWrapper}>
+        <Button className={s.button}>Add</Button>
+      </div>
+    </>
   );
 };
 

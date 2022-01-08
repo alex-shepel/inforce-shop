@@ -1,0 +1,18 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.date {
+  color: #aaa;
+}
+
+.subtitle {
+  margin: 10px 0;
+}
+
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}

@@ -1,3 +1,14 @@
+:root {
+  --add-card-height: 5vh;
+  --list-height: calc(100vh-var(add-card-height));
+}
+
+.listWrapper {
+  padding: 10px;
+  height: 90vh;
+  overflow-y: scroll;
+}
+
 .list {
   display: flex;
   flex-wrap: wrap;
@@ -5,10 +16,26 @@
   gap: 20px;
 }
 
-.item {
-  max-width: 350px;
+.buttonWrapper {
+  height: 10vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.125);
+  background-color: rgba(0, 0, 0, 0.03);
+}
+
+.button {
+  display: block;
 }
 
 .cardTitle {
   font-size: 14px;
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
