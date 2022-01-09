@@ -1,8 +1,8 @@
 import { useState } from 'react';
 
-const useFormState = keys => {
-  const initialState = keys.reduce((acc, key) => {
-    acc[key] = '';
+const useFormState = inputs => {
+  const initialState = inputs.reduce((acc, input) => {
+    acc[input.key] = input.value;
     return acc;
   }, {});
 

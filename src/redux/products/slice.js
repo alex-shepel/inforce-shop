@@ -90,10 +90,7 @@ const slice = createSlice({
       state.isUpdating = true;
     },
     [updateItem.fulfilled]: (state, { payload }) => {
-      const outdatedItem = state.items.find(item => item.id === payload.id);
-      outdatedItem.name = payload.name;
-      outdatedItem.number = payload.number;
-      state.items.sort((a, b) => a.name.localeCompare(b.name));
+      state.viewItem = { ...state.viewItem, ...payload };
       state.isUpdating = false;
     },
     [updateItem.rejected]: (state, { payload }) => {

@@ -6,6 +6,7 @@ import {
   getDeletingIds,
   getIsLoading,
   getSortedItems,
+  getIsAdding,
 } from 'redux/products';
 import { useEffect, useState } from 'react';
 import Spinner from 'components/Spinner';
@@ -28,6 +29,7 @@ const ProductsListView = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const items = useSelector(getSortedItems);
   const isLoading = useSelector(getIsLoading);
+  const isAdding = useSelector(getIsAdding);
   const deletingIds = useSelector(getDeletingIds);
   const dispatch = useDispatch();
 
@@ -37,8 +39,8 @@ const ProductsListView = () => {
 
   useEffect(() => {
     setBackupView(view);
-    setView(isLoading ? View.LOADING : backupView);
-  }, [isLoading]);
+    setView(isLoading || isAdding ? View.LOADING : backupView);
+  }, [isLoading, isAdding]);
 
   useEffect(() => {
     if (!items) {
@@ -55,6 +57,11 @@ const ProductsListView = () => {
     setIsModalOpen(false);
   };
 
+  const handleModalSubmit = formData => {
+    setIsModalOpen(false);
+    dispatch(addItem(formData));
+  };
+
   const renderDeleteButton = id =>
     deletingIds.includes(id) ? (
       <Spinner size={24} />
@@ -63,7 +70,7 @@ const ProductsListView = () => {
     );
 
   const renderItem = ({ id, name, count, imageUrl }) => (
-    <li className={s.item} key={id}>
+    <li key={id}>
       <Card>
         <Link to={`/products/${id}`}>
           <Card.Img
@@ -137,11 +144,8 @@ const ProductsListView = () => {
               },
             ]}
             buttonLabel={'Add'}
-            onSubmit={formData => {
-              dispatch(addItem(formData));
-            }}
+            onSubmit={handleModalSubmit}
             onClose={handleModalClose}
-            isSubmitting={isLoading}
           />
         </Modal>
       )}

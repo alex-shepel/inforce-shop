@@ -1,6 +1,16 @@
 import * as api from 'services/shop-api';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 
+const toPayload = data => {
+  const { name, count, width, height, weight } = data;
+  return {
+    name,
+    count,
+    size: { width, height },
+    weight,
+  };
+};
+
 const fetchItems = createAsyncThunk(
   'products/fetchItems',
   async (_, { rejectWithValue }) => {
@@ -26,15 +36,8 @@ const fetchItem = createAsyncThunk(
 const addItem = createAsyncThunk(
   'products/addItem',
   async (data, { rejectWithValue }) => {
-    const { name, count, width, height, weight } = data;
-    const payload = {
-      name,
-      count,
-      size: { width, height },
-      weight: `${weight}g`,
-    };
     try {
-      return await api.addProduct(payload);
+      return await api.addProduct(toPayload(data));
     } catch (error) {
       return rejectWithValue(error.response);
     }
@@ -54,10 +57,11 @@ const deleteItem = createAsyncThunk(
 
 const updateItem = createAsyncThunk(
   'products/updateItem',
-  async ({ id, ...data }, { rejectWithValue }) => {
+  async ({ id, data }, { rejectWithValue }) => {
     try {
-      return await api.editProduct(id, data);
+      return await api.editProduct(id, toPayload(data));
     } catch (error) {
+      console.log('error :', error);
       return rejectWithValue(error.response);
     }
   },
