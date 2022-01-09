@@ -1,9 +1,10 @@
 import s from './App.module.css';
 import Spinner from 'components/Spinner';
-import { Suspense } from 'react';
+import { lazy, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
-import ProductsListView from 'views/ProductsListView';
-import ProductView from 'views/ProductView';
+
+const ProductsListView = lazy(() => import('views/ProductsListView'));
+const ProductView = lazy(() => import('views/ProductView'));
 
 const App = () => {
   return (
