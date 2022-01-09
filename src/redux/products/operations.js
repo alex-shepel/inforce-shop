@@ -26,8 +26,15 @@ const fetchItem = createAsyncThunk(
 const addItem = createAsyncThunk(
   'products/addItem',
   async (data, { rejectWithValue }) => {
+    const { name, count, width, height, weight } = data;
+    const payload = {
+      name,
+      count,
+      size: { width, height },
+      weight: `${weight}g`,
+    };
     try {
-      return await api.addProduct(data);
+      return await api.addProduct(payload);
     } catch (error) {
       return rejectWithValue(error.response);
     }

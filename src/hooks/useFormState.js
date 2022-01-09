@@ -9,18 +9,9 @@ const useFormState = keys => {
   const [state, setState] = useState(initialState);
 
   const set = (key, value) => setState({ ...state, [key]: value });
-  const clear = keys => {
-    const cleanedProps = keys.reduce((acc, key) => {
-      if (state.hasOwnProperty(key)) {
-        acc[key] = '';
-      }
-      return acc;
-    }, {});
-    setState({ ...state, ...cleanedProps });
-  };
+  const clear = () => setState({ ...initialState });
 
   return [state, set, clear];
 };
 
 export default useFormState;
-

@@ -6,7 +6,13 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 
-const BootstrapForm = ({ inputs, buttonLabel, onSubmit, isSubmitting }) => {
+const BootstrapForm = ({
+  inputs,
+  buttonLabel,
+  onSubmit,
+  onClose,
+  isSubmitting,
+}) => {
   const [formState, setFormState, clearFormState] = useFormState(
     inputs.map(input => input.name),
   );
@@ -15,6 +21,7 @@ const BootstrapForm = ({ inputs, buttonLabel, onSubmit, isSubmitting }) => {
     e.preventDefault();
     onSubmit(formState);
     clearFormState();
+    onClose();
   };
 
   const createInput = config => (
@@ -35,19 +42,22 @@ const BootstrapForm = ({ inputs, buttonLabel, onSubmit, isSubmitting }) => {
     </FloatingLabel>
   );
 
-  const createButton = () => (
+  const createButtons = () => (
     <div className={s.buttonContainer}>
       <Button disabled={isSubmitting} type="submit" variant={'primary'}>
         {buttonLabel}
       </Button>
       {isSubmitting && <Spinner />}
+      <Button variant={'secondary'} onClick={onClose}>
+        Cancel
+      </Button>
     </div>
   );
 
   return (
     <Form onSubmit={handleSubmit}>
       {inputs.map(createInput)}
-      {createButton()}
+      {createButtons()}
     </Form>
   );
 };
@@ -56,12 +66,13 @@ BootstrapForm.propTypes = {
   inputs: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
-      type: PropTypes.oneOf(['text', 'email', 'password', 'phone']).isRequired,
+      type: PropTypes.oneOf(['text', 'number']).isRequired,
       name: PropTypes.string.isRequired,
     }).isRequired,
   ).isRequired,
   buttonLabel: PropTypes.string.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
   isSubmitting: PropTypes.bool.isRequired,
 };
 

@@ -1,15 +1,13 @@
-:root {
-  --add-card-height: 5vh;
-  --list-height: calc(100vh-var(add-card-height));
+.scrollWrapper {
+  height: 90vh;
+  overflow-y: scroll;
 }
 
 .contentWrapper {
   padding: 10px;
-  height: 90vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow-y: scroll;
 }
 
 .list {
@@ -42,9 +40,4 @@
   justify-content: space-between;
   align-items: center;
   min-height: 60px;
-}
-
-.spinner {
-  min-height: 90vh;
-  padding: 10px;
 }

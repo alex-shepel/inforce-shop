@@ -1,7 +1,8 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  deleteItem,
   fetchItems,
+  addItem,
+  deleteItem,
   getDeletingIds,
   getIsLoading,
   getSortedItems,
@@ -19,12 +20,12 @@ const View = {
   EMPTY: 'empty',
   LOADING: 'loading',
   NORMAL: 'normal',
-  MODAL: 'modal',
 };
 
 const ProductsListView = () => {
   const [view, setView] = useState(View.LOADING);
   const [backupView, setBackupView] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const items = useSelector(getSortedItems);
   const isLoading = useSelector(getIsLoading);
   const deletingIds = useSelector(getDeletingIds);
@@ -47,12 +48,11 @@ const ProductsListView = () => {
   }, [items]);
 
   const handleAddProduct = () => {
-    setBackupView(view);
-    setView(View.MODAL);
+    setIsModalOpen(true);
   };
 
   const handleModalClose = () => {
-    setView(backupView);
+    setIsModalOpen(false);
   };
 
   const renderDeleteButton = id =>
@@ -90,15 +90,23 @@ const ProductsListView = () => {
 
   return (
     <>
-      <div className={s.contentWrapper}>
-        {view === View.EMPTY && <p>There are nothing yet...</p>}
+      <div className={s.scrollWrapper}>
+        <div className={s.contentWrapper}>
+          {view === View.EMPTY && <p>There are nothing yet...</p>}
 
-        {view === View.NORMAL && renderList()}
+          {view === View.NORMAL && renderList()}
 
-        {view === View.LOADING && <Spinner size={64} color={'#444'} />}
+          {view === View.LOADING && <Spinner size={64} color={'#444'} />}
+        </div>
       </div>
 
-      {view === View.MODAL && (
+      <div className={s.buttonWrapper}>
+        <Button className={s.button} onClick={handleAddProduct}>
+          Add
+        </Button>
+      </div>
+
+      {isModalOpen && (
         <Modal onClose={handleModalClose}>
           <BootstrapForm
             inputs={[
@@ -108,30 +116,35 @@ const ProductsListView = () => {
                 name: 'name',
               },
               {
-                label: 'Email',
-                type: 'email',
-                name: 'email',
+                label: 'Count',
+                type: 'number',
+                name: 'count',
               },
               {
-                label: 'Password',
-                type: 'password',
-                name: 'password',
+                label: 'Width',
+                type: 'number',
+                name: 'width',
+              },
+              {
+                label: 'Height',
+                type: 'number',
+                name: 'height',
+              },
+              {
+                label: 'Weight',
+                type: 'number',
+                name: 'weight',
               },
             ]}
-            buttonLabel={'Register'}
+            buttonLabel={'Add'}
             onSubmit={formData => {
-              // dispatch();
+              dispatch(addItem(formData));
             }}
+            onClose={handleModalClose}
             isSubmitting={isLoading}
           />
         </Modal>
       )}
-
-      <div className={s.buttonWrapper}>
-        <Button className={s.button} onClick={handleAddProduct}>
-          Add
-        </Button>
-      </div>
     </>
   );
 };
