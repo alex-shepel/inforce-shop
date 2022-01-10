@@ -7,6 +7,7 @@ import {
   getIsLoading,
   getSortedItems,
   getIsAdding,
+  getError,
 } from 'redux/products';
 import { useEffect, useState } from 'react';
 import Spinner from 'components/Spinner';
@@ -21,13 +22,14 @@ const View = {
   EMPTY: 'empty',
   LOADING: 'loading',
   NORMAL: 'normal',
+  ERROR: 'error',
 };
 
 const ProductsListView = () => {
   const [view, setView] = useState(View.LOADING);
-  const [backupView, setBackupView] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const items = useSelector(getSortedItems);
+  const error = useSelector(getError);
   const isLoading = useSelector(getIsLoading);
   const isAdding = useSelector(getIsAdding);
   const deletingIds = useSelector(getDeletingIds);
@@ -38,8 +40,15 @@ const ProductsListView = () => {
   }, [dispatch]);
 
   useEffect(() => {
-    setBackupView(view);
-    setView(isLoading || isAdding ? View.LOADING : backupView);
+    if (error) {
+      setView(View.ERROR);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (isLoading || isAdding) {
+      setView(View.LOADING);
+    }
   }, [isLoading, isAdding]);
 
   useEffect(() => {
@@ -104,6 +113,8 @@ const ProductsListView = () => {
           {view === View.NORMAL && renderList()}
 
           {view === View.LOADING && <Spinner size={64} color={'#444'} />}
+
+          {view === View.ERROR && <p>{error}</p>}
         </div>
       </div>
 

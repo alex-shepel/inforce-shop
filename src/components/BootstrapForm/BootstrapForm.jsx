@@ -4,7 +4,6 @@ import useFormState from 'hooks/useFormState';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import { useEffect } from 'react';
 
 const BootstrapForm = ({ inputs, buttonLabel, onSubmit, onClose }) => {
   const [formState, setFormState, clearFormState] = useFormState(
@@ -13,14 +12,6 @@ const BootstrapForm = ({ inputs, buttonLabel, onSubmit, onClose }) => {
       value: input.value ? input.value : '',
     })),
   );
-
-  useEffect(() => {
-    console.log('inputs :', inputs);
-    // inputs.forEach(input =>
-    //   setFormState(input.name, input.value ? input.value : ''),
-    // );
-    // setFormState('name', 'hello');
-  }, [inputs]);
 
   const handleSubmit = e => {
     e.preventDefault();

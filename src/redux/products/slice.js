@@ -10,6 +10,7 @@ import {
 const initialState = {
   items: null,
   viewItem: null,
+  error: null,
   isLoading: false,
   isAdding: false,
   isOpening: false,
@@ -18,17 +19,21 @@ const initialState = {
 };
 
 const Error = {
-  AUTH: 'Authentication token expired.',
-  UNKNOWN: 'Unknown backend error occurred.',
+  NOT_FOUND: 'Such item is not found.',
+  SERVER_ERROR: 'Unknown server error occurred.',
 };
 
-const handleError = (state, error) => {
-  if (error.statusText === 'Unauthorized') {
-    state.isTokenExpired = true;
-    return Error.AUTH;
+const handleError = (state, { status }) => {
+  switch (status) {
+    case 404:
+      state.error = Error.NOT_FOUND;
+      break;
+    case 500:
+      state.error = Error.SERVER_ERROR;
+      break;
+    default:
+      state.error = Error.SERVER_ERROR;
   }
-
-  return Error.UNKNOWN;
 };
 
 // We can mutate state below because of integrated IMMER lib only!
@@ -36,9 +41,14 @@ const handleError = (state, error) => {
 const slice = createSlice({
   name: 'contacts',
   initialState,
-  reducers: {},
+  reducers: {
+    clearError: state => {
+      state.error = null;
+    },
+  },
   extraReducers: {
     [fetchItems.pending]: state => {
+      state.error = null;
       state.isLoading = true;
     },
     [fetchItems.fulfilled]: (state, { payload }) => {
@@ -51,6 +61,7 @@ const slice = createSlice({
     },
 
     [fetchItem.pending]: state => {
+      state.error = null;
       state.viewItem = null;
       state.isOpening = true;
     },
@@ -64,6 +75,7 @@ const slice = createSlice({
     },
 
     [addItem.pending]: state => {
+      state.error = null;
       state.isAdding = true;
     },
     [addItem.fulfilled]: (state, { payload }) => {
@@ -76,6 +88,7 @@ const slice = createSlice({
     },
 
     [deleteItem.pending]: (state, { meta }) => {
+      state.error = null;
       state.deletingIds.push(meta.arg);
     },
     [deleteItem.fulfilled]: (state, { meta }) => {
@@ -87,6 +100,7 @@ const slice = createSlice({
     },
 
     [updateItem.pending]: state => {
+      state.error = null;
       state.isUpdating = true;
     },
     [updateItem.fulfilled]: (state, { payload }) => {
@@ -100,4 +114,4 @@ const slice = createSlice({
 });
 
 export const { reducer: productsReducer } = slice;
-// export const {} = slice.actions;
+export const { clearError } = slice.actions;

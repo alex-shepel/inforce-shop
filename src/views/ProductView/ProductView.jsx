@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Spinner from 'components/Spinner';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -11,21 +11,39 @@ import {
   getIsOpening,
   fetchItem,
   updateItem,
+  getError,
+  clearError,
 } from 'redux/products';
 import { useEffect, useState } from 'react';
 import s from './ProductView.module.css';
 import { useRouteMatch } from 'react-router-dom';
 
+const View = {
+  OPENING: 'opening',
+  NORMAL: 'normal',
+  ERROR: 'error',
+};
+
 const ProductView = () => {
+  const [view, setView] = useState(View.LOADING);
   const item = useSelector(getViewItem);
   const isOpening = useSelector(getIsOpening);
+  const error = useSelector(getError);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const match = useRouteMatch();
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(fetchItem(match.params.id));
-  }, [dispatch]);
+  }, [dispatch, match.params.id]);
+
+  useEffect(() => {
+    if (error) {
+      setView(View.ERROR);
+      return;
+    }
+    setView(isOpening || !item ? View.LOADING : View.NORMAL);
+  }, [error, isOpening, item]);
 
   const handleEditProduct = () => {
     setIsModalOpen(true);
@@ -49,6 +67,12 @@ const ProductView = () => {
     );
   };
 
+  const renderError = () => (
+    <Card.Body>
+      <Card.Text>{error}</Card.Text>
+    </Card.Body>
+  );
+
   const renderInfo = () => {
     const { imageUrl, name, count, size, weight, comments } = item;
 
@@ -56,7 +80,7 @@ const ProductView = () => {
       <>
         <Card.Img variant="top" src={imageUrl} alt={'product poster'} />
         <Card.Body>
-          <Card.Title className={s.cardTitle}>{name}</Card.Title>
+          <Card.Title>{name}</Card.Title>
           <ListGroup horizontal as={'ul'}>
             <ListGroup.Item as={'li'}>Count: {count}</ListGroup.Item>
             <ListGroup.Item as={'li'}>
@@ -86,13 +110,13 @@ const ProductView = () => {
             Edit
           </Button>
         </Card.Header>
-        {isOpening || !item ? (
+        {view === View.OPENING && (
           <div className={s.spinner}>
             <Spinner size={64} color={'#444'} />
           </div>
-        ) : (
-          renderInfo()
         )}
+        {view === View.NORMAL && renderInfo()}
+        {view === View.ERROR && renderError()}
       </Card>
 
       {isModalOpen && !!item && (

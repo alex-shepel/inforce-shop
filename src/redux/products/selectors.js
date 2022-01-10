@@ -1,6 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 
 const getItems = state => state.products.items;
+const getError = state => state.products.error;
 const getViewItem = state => state.products.viewItem;
 const getIsLoading = state => state.products.isLoading;
 const getIsOpening = state => state.products.isOpening;
@@ -13,6 +14,7 @@ const getSortedItems = createSelector(getItems, items =>
 
 export {
   getItems,
+  getError,
   getViewItem,
   getIsLoading,
   getIsOpening,
