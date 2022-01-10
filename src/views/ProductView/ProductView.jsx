@@ -1,4 +1,4 @@
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Spinner from 'components/Spinner';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -12,7 +12,6 @@ import {
   fetchItem,
   updateItem,
   getError,
-  clearError,
 } from 'redux/products';
 import { useEffect, useState } from 'react';
 import s from './ProductView.module.css';
@@ -40,10 +39,20 @@ const ProductView = () => {
   useEffect(() => {
     if (error) {
       setView(View.ERROR);
-      return;
     }
-    setView(isOpening || !item ? View.LOADING : View.NORMAL);
-  }, [error, isOpening, item]);
+  }, [error]);
+
+  useEffect(() => {
+    if (item) {
+      setView(View.NORMAL);
+    }
+  }, [item]);
+
+  useEffect(() => {
+    if (isOpening) {
+      setView(View.OPENING);
+    }
+  }, [isOpening]);
 
   const handleEditProduct = () => {
     setIsModalOpen(true);

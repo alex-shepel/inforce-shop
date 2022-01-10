@@ -41,15 +41,12 @@ const handleError = (state, { status }) => {
 const slice = createSlice({
   name: 'contacts',
   initialState,
-  reducers: {
-    clearError: state => {
-      state.error = null;
-    },
-  },
+  reducers: {},
   extraReducers: {
     [fetchItems.pending]: state => {
       state.error = null;
       state.isLoading = true;
+      state.viewItem = null;
     },
     [fetchItems.fulfilled]: (state, { payload }) => {
       state.items = payload.sort((a, b) => a.name.localeCompare(b.name));
@@ -84,6 +81,7 @@ const slice = createSlice({
       state.isAdding = false;
     },
     [addItem.rejected]: (state, { payload }) => {
+      handleError(state, payload);
       state.isAdding = false;
     },
 
@@ -96,6 +94,7 @@ const slice = createSlice({
       state.deletingIds = state.deletingIds.filter(id => id !== meta.arg);
     },
     [deleteItem.rejected]: (state, { meta, payload }) => {
+      handleError(state, payload);
       state.deletingIds = state.deletingIds.filter(id => id !== meta.arg);
     },
 
@@ -108,10 +107,10 @@ const slice = createSlice({
       state.isUpdating = false;
     },
     [updateItem.rejected]: (state, { payload }) => {
+      handleError(state, payload);
       state.isUpdating = false;
     },
   },
 });
 
 export const { reducer: productsReducer } = slice;
-export const { clearError } = slice.actions;
